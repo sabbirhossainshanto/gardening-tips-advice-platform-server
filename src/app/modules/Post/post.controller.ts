@@ -15,9 +15,7 @@ const createPost = catchAsync(async (req, res) => {
 });
 
 const getUserPost = catchAsync(async (req, res) => {
-  const { email } = req.params;
-  const posts = await postService.getUserPostFromDB(email);
-
+  const posts = await postService.getUserPostFromDB(req.user);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,

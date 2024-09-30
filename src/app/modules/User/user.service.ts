@@ -1,3 +1,4 @@
+import { JwtPayload } from 'jsonwebtoken';
 import { QueryBuilder } from '../../builder/QueryBuilder';
 import { UserSearchableFields } from './user.constant';
 import { TUser } from './user.interface';
@@ -9,8 +10,11 @@ const createUser = async (payload: TUser) => {
   return user;
 };
 
-const getAllUsersFromDB = async (query: Record<string, unknown>) => {
-  const users = new QueryBuilder(User.find(), query)
+const getAllUsersFromDB = async (
+  query: Record<string, unknown>,
+  user: JwtPayload
+) => {
+  const users = new QueryBuilder(User.find({ _id: { $ne: user?._id } }), query)
     .fields()
     .paginate()
     .sort()

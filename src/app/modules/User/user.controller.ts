@@ -15,7 +15,7 @@ const userRegister = catchAsync(async (req, res) => {
 });
 
 const getAllUsers = catchAsync(async (req, res) => {
-  const users = await UserServices.getAllUsersFromDB(req.query);
+  const users = await UserServices.getAllUsersFromDB(req.query, req.user);
 
   sendResponse(res, {
     success: true,

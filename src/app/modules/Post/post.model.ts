@@ -16,8 +16,8 @@ const postSchema = new Schema<TPost>(
       required: true,
       ref: 'User',
     },
-    imageUrls: {
-      type: [String],
+    imageUrl: {
+      type: String,
       required: true,
     },
     category: {
@@ -41,7 +41,7 @@ const postSchema = new Schema<TPost>(
       ref: 'User',
     },
     comments: {
-      type: Schema.Types.ObjectId,
+      type: [Schema.Types.ObjectId],
       ref: 'Comment',
     },
   },

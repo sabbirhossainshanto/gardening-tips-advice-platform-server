@@ -16,5 +16,9 @@ router.post(
   validateRequest(UserValidation.createUserValidationSchema),
   UserControllers.userRegister
 );
-router.get('/', UserControllers.getAllUsers);
+router.get(
+  '/',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  UserControllers.getAllUsers
+);
 router.get('/:id', UserControllers.getSingleUser);
