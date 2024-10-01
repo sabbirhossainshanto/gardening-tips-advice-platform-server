@@ -35,6 +35,13 @@ const followUser = async (
       },
       { new: true }
     );
+    await User.findByIdAndUpdate(
+      user?._id,
+      {
+        $pull: { following:payload?.followingId},
+      },
+      { new: true }
+    );
 
     return {
       result,
@@ -45,6 +52,13 @@ const followUser = async (
       payload?.followingId,
       {
         $addToSet: { followers: user?._id },
+      },
+      { new: true }
+    );
+    await User.findByIdAndUpdate(
+      user?._id,
+      {
+        $addToSet: { following: payload?.followingId },
       },
       { new: true }
     );

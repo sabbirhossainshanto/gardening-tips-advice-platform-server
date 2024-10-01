@@ -34,6 +34,23 @@ const getUserPostFromDB = async (user: JwtPayload) => {
   return post;
 };
 
+const getAllPostFromDB = async () => {
+  const post = await Post.find()
+    .populate('upvotes')
+    .populate('downvotes')
+    .populate('user');
+
+  return post;
+};
+const getSinglePostFromDB = async (id: string) => {
+  const post = await Post.findById(id)
+    .populate('upvotes')
+    .populate('downvotes')
+    .populate('user');
+
+  return post;
+};
+
 const updateVote = async (payload: IUpdateVote) => {
   const isUserExist = await User.findOne({ _id: payload.userId });
   const isPostExist = await Post.findOne({ _id: payload.postId });
@@ -124,8 +141,77 @@ const updateVote = async (payload: IUpdateVote) => {
   }
 };
 
+const bookmarkFavoritePost = async (
+  payload: { postId: string },
+  user: JwtPayload
+) => {
+  const isPostExist = await Post.findOne({ _id: payload.postId });
+  const isUserExist = await User.findOne({ _id: user?._id });
+
+  if (!isPostExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Post not found');
+  }
+  if (!isUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+
+  /* Find already bookmarked this post  */
+  const isAlreadyBookmarked = isUserExist?.favorites?.find((favorite) => {
+    return favorite.equals(new ObjectId(payload.postId));
+  });
+
+  if (isAlreadyBookmarked) {
+    // remove the bookmark from favorites array
+    const result = await User.findByIdAndUpdate(
+      user?._id,
+      {
+        $pull: { favorites: payload.postId },
+      },
+      { new: true }
+    );
+
+    return {
+      result,
+      message: 'Removed bookmark post successfully!',
+    };
+  } else {
+    // push the post id to favorites array
+    const result = await User.findByIdAndUpdate(
+      user?._id,
+      {
+        $addToSet: { favorites: payload.postId },
+      },
+      { new: true }
+    );
+    return {
+      result,
+      message: 'Added to bookmark successfully!',
+    };
+  }
+};
+
+const deletePostFromDB = async (id: string) => {
+  const post = await Post.findById(id);
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Post not found');
+  }
+  const result = await Post.findByIdAndDelete(id, { new: true });
+  await User.findByIdAndUpdate(
+    post.user,
+    {
+      $pull: { posts: id },
+    },
+    { new: true }
+  );
+  return result;
+};
+
 export const postService = {
   createPostToDB,
   getUserPostFromDB,
   updateVote,
+  deletePostFromDB,
+  bookmarkFavoritePost,
+  getAllPostFromDB,
+  getSinglePostFromDB,
 };

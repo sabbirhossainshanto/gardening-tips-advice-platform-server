@@ -22,3 +22,4 @@ router.get(
   UserControllers.getAllUsers
 );
 router.get('/:id', UserControllers.getSingleUser);
+router.put('/update-user/:userId', UserControllers.updateUser);

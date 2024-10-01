@@ -9,7 +9,22 @@ const getMyProfile = async (user: JwtPayload) => {
   const profile = await User.findOne({
     email: user.email,
     status: USER_STATUS.ACTIVE,
-  });
+  })
+    .populate('followers')
+    .populate('following')
+    .populate('posts')
+    .populate({
+      path: 'favorites',
+      populate: {
+        path: 'upvotes',
+      },
+    })
+    .populate({
+      path: 'favorites',
+      populate: {
+        path: 'downvotes',
+      },
+    });
 
   if (!profile) {
     throw new AppError(httpStatus.NOT_FOUND, 'User does not exixts!');

@@ -3,6 +3,8 @@ import { QueryBuilder } from '../../builder/QueryBuilder';
 import { UserSearchableFields } from './user.constant';
 import { TUser } from './user.interface';
 import { User } from './user.model';
+import AppError from '../../errors/AppError';
+import httpStatus from 'http-status';
 
 const createUser = async (payload: TUser) => {
   const user = await User.create(payload);
@@ -14,7 +16,14 @@ const getAllUsersFromDB = async (
   query: Record<string, unknown>,
   user: JwtPayload
 ) => {
-  const users = new QueryBuilder(User.find({ _id: { $ne: user?._id } }), query)
+  const users = new QueryBuilder(
+    User.find({ _id: { $ne: user?._id } })
+      .populate('followers')
+      .populate('following')
+      .populate('posts')
+      .populate('favorites'),
+    query
+  )
     .fields()
     .paginate()
     .sort()
@@ -32,8 +41,22 @@ const getSingleUserFromDB = async (id: string) => {
   return user;
 };
 
+const updateUser = async (
+  id: string,
+  data: Partial<{ role: 'USER' | 'ADMIN'; status: 'ACTIVE' | 'BLOCKED' }>
+) => {
+  const profile = await User.findById(id);
+
+  if (!profile) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user does not exits!');
+  }
+
+  return await User.findByIdAndUpdate(id, data, { new: true });
+};
+
 export const UserServices = {
   createUser,
   getAllUsersFromDB,
   getSingleUserFromDB,
+  updateUser,
 };

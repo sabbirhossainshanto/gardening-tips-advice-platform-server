@@ -4,6 +4,7 @@ import { UserRoutes } from '../modules/User/user.route';
 import { ProfileRoutes } from '../modules/Profile/profile.route';
 import { postRoutes } from '../modules/Post/post.route';
 import { followRoutes } from '../modules/Follow/follow.route';
+import { commentRoutes } from '../modules/Comment/comment.route';
 
 const router = express.Router();
 
@@ -28,6 +29,10 @@ const moduleRoutes = [
   {
     path: '/follow',
     route: followRoutes,
+  },
+  {
+    path: '/comments',
+    route: commentRoutes,
   },
 ];
 

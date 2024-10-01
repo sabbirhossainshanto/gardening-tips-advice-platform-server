@@ -31,6 +31,14 @@ const registerUser = async (payload: TRegisterUser) => {
     profilePhoto: newUser.profilePhoto,
     role: newUser.role,
     status: newUser.status,
+    isVerified: newUser?.isVerified,
+    premiumStatus: newUser?.premiumStatus,
+    followers: newUser?.followers,
+    following: newUser?.following,
+    posts: newUser?.posts,
+    favorites: newUser?.favorites,
+    createdAt: newUser?.createdAt,
+    updatedAt: newUser?.updatedAt,
   };
 
   const accessToken = createToken(
@@ -73,7 +81,7 @@ const loginUser = async (payload: TLoginUser) => {
 
   //create token and sent to the  client
 
-  const jwtPayload = {
+ const jwtPayload = {
     _id: user._id,
     name: user.name,
     email: user.email,
@@ -81,7 +89,16 @@ const loginUser = async (payload: TLoginUser) => {
     profilePhoto: user.profilePhoto,
     role: user.role,
     status: user.status,
+    isVerified: user?.isVerified,
+    premiumStatus: user?.premiumStatus,
+    followers: user?.followers,
+    following: user?.following,
+    posts: user?.posts,
+    favorites: user?.favorites,
+    createdAt: user?.createdAt,
+    updatedAt: user?.updatedAt,
   };
+
 
   const accessToken = createToken(
     jwtPayload,
