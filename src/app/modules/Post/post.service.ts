@@ -34,11 +34,41 @@ const getUserPostFromDB = async (user: JwtPayload) => {
   return post;
 };
 
+const getSingleUserPostsFromDB = async (id: string) => {
+  const isUserExist = await User.findById(id);
+  if (!isUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'User not found');
+  }
+  const posts = await Post.find({ user: isUserExist._id })
+    .populate('upvotes')
+    .populate('downvotes')
+    .populate('user');
+
+  return posts;
+};
+
 const getAllPostFromDB = async () => {
   const post = await Post.find()
     .populate('upvotes')
     .populate('downvotes')
-    .populate('user');
+    .populate({
+      path: 'user',
+      populate: {
+        path: 'followers',
+      },
+    })
+    .populate({
+      path: 'user',
+      populate: {
+        path: 'following',
+      },
+    })
+    .populate({
+      path: 'user',
+      populate: {
+        path: 'posts',
+      },
+    });
 
   return post;
 };
@@ -46,7 +76,24 @@ const getSinglePostFromDB = async (id: string) => {
   const post = await Post.findById(id)
     .populate('upvotes')
     .populate('downvotes')
-    .populate('user');
+    .populate({
+      path: 'user',
+      populate: {
+        path: 'followers',
+      },
+    })
+    .populate({
+      path: 'user',
+      populate: {
+        path: 'following',
+      },
+    })
+    .populate({
+      path: 'user',
+      populate: {
+        path: 'posts',
+      },
+    });
 
   return post;
 };
@@ -214,4 +261,5 @@ export const postService = {
   bookmarkFavoritePost,
   getAllPostFromDB,
   getSinglePostFromDB,
+  getSingleUserPostsFromDB,
 };

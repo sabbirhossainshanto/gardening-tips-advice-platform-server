@@ -23,6 +23,16 @@ const getUserPost = catchAsync(async (req, res) => {
     data: posts,
   });
 });
+
+const getSingleUserPosts = catchAsync(async (req, res) => {
+  const posts = await postService.getSingleUserPostsFromDB(req?.params?.userId);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Posts are retrieve Successfully',
+    data: posts,
+  });
+});
 const getAllPost = catchAsync(async (req, res) => {
   const posts = await postService.getAllPostFromDB();
   sendResponse(res, {
@@ -89,4 +99,5 @@ export const postController = {
   bookmarkFavoritePost,
   getAllPost,
   getSinglePost,
+  getSingleUserPosts,
 };

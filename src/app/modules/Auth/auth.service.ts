@@ -81,7 +81,7 @@ const loginUser = async (payload: TLoginUser) => {
 
   //create token and sent to the  client
 
- const jwtPayload = {
+  const jwtPayload = {
     _id: user._id,
     name: user.name,
     email: user.email,
@@ -98,7 +98,6 @@ const loginUser = async (payload: TLoginUser) => {
     createdAt: user?.createdAt,
     updatedAt: user?.updatedAt,
   };
-
 
   const accessToken = createToken(
     jwtPayload,
@@ -140,7 +139,7 @@ const changePassword = async (
   //checking if the password is correct
 
   if (!(await User.isPasswordMatched(payload.oldPassword, user?.password)))
-    throw new AppError(httpStatus.FORBIDDEN, 'Password do not matched');
+    throw new AppError(httpStatus.FORBIDDEN, 'Old Password do not matched');
 
   //hash new password
   const newHashedPassword = await bcrypt.hash(
