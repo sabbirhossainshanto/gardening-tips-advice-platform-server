@@ -65,6 +65,17 @@ const updatePostVote = catchAsync(async (req, res) => {
   });
 });
 
+const getUpvotersForMyPosts = catchAsync(async (req, res) => {
+  const upvoters = await postService.getUpvotersForMyPosts(req.user);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Upvoters retrieved successfully',
+    data: upvoters,
+  });
+});
+
 const bookmarkFavoritePost = catchAsync(async (req, res) => {
   const { message, result } = await postService.bookmarkFavoritePost(
     req.body,
@@ -100,4 +111,5 @@ export const postController = {
   getAllPost,
   getSinglePost,
   getSingleUserPosts,
+  getUpvotersForMyPosts,
 };

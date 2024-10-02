@@ -11,11 +11,16 @@ export const UserRoutes = router;
 
 router.post(
   '/create-post',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   validateRequest(postValidation.createPostValidationSchema),
   postController.createPost
 );
 
-router.put('/vote', postController.updatePostVote);
+router.put(
+  '/vote',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  postController.updatePostVote
+);
 
 router.put(
   '/bookmark',
@@ -25,6 +30,11 @@ router.put(
 router.get('/', postController.getAllPost);
 router.get('/:postId', postController.getSinglePost);
 router.get('/user/:userId', postController.getSingleUserPosts);
+router.get(
+  '/users/upvoters',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  postController.getUpvotersForMyPosts
+);
 
 router.get(
   '/get-my-post',

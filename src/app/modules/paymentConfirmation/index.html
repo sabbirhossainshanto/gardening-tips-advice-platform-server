@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Confirmation Modal</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .modal-content {
+        background: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        width: 400px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        text-align: center;
+      }
+
+      .modal-content h2 {
+        margin-top: 0;
+      }
+
+      .booking-details {
+        display: flex;
+        flex-direction: column;
+        margin: 20px 0;
+        text-align: center;
+      }
+
+      .booking-details p {
+        margin: 5px 0;
+      }
+
+      #back-buttons {
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      #back-buttons:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body id="back-button">
+    <div class="modal-overlay">
+      <div class="modal-content">
+        <h2>Payment {{success}}!</h2>
+        <p>{{greeting}}</p>
+        <div class="booking-details">
+          <p><strong>Transaction ID:</strong> {{transactionId}}</p>
+          <p><strong>Transaction Date:</strong> {{date}}</p>
+          <!-- Add more details as needed -->
+        </div>
+        <button id="back-buttons">Back to Home</button>
+      </div>
+    </div>
+    <script>
+      document.getElementById('back-button').addEventListener('click', () => {
+        window.location.href = 'http://localhost:3001/';
+      });
+    </script>
+  </body>
+</html>

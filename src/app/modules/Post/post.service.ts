@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 import { User } from '../User/user.model';
@@ -188,6 +189,26 @@ const updateVote = async (payload: IUpdateVote) => {
   }
 };
 
+const getUpvotersForMyPosts = async (user: JwtPayload) => {
+  const isUserExist = await User.findById(user?._id);
+  if (!isUserExist) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found');
+  }
+
+  const posts = await Post.find({ user: user?._id }).populate('upvotes');
+
+  if (!posts) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user have no post');
+  }
+  const upvoters: any = [];
+  posts.forEach((post) => {
+    post.upvotes.forEach((upvote) => {
+      upvoters.push(upvote);
+    });
+  });
+  return upvoters;
+};
+
 const bookmarkFavoritePost = async (
   payload: { postId: string },
   user: JwtPayload
@@ -262,4 +283,5 @@ export const postService = {
   getAllPostFromDB,
   getSinglePostFromDB,
   getSingleUserPostsFromDB,
+  getUpvotersForMyPosts,
 };
