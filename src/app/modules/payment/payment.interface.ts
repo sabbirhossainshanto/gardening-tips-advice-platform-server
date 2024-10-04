@@ -4,4 +4,5 @@ export type TPayment = {
   customerName: string;
   customerEmail: string;
   customerMobileNo?: string;
+  isPaid?: boolean;
 };

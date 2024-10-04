@@ -9,16 +9,15 @@ const verifyProfileSchema = new Schema<IVerifyProfile>({
   },
 
   date: {
-    type: String,
-    required: true,
+    type: Date,
   },
 
   amount: {
     type: Number,
+    required: true,
   },
   isDeleted: {
     type: Boolean,
-    required: true,
     default: false,
   },
   transactionId: {

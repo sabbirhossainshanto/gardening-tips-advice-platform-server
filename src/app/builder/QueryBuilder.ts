@@ -9,14 +9,14 @@ export class QueryBuilder<T> {
     this.query = query;
     this.modelQuery = modelQuery;
   }
+
   search(searchableFields: string[]) {
     let searchTerm = '';
 
     if (this.query?.searchTerm) {
       searchTerm = this.query.searchTerm as string;
     }
-    // {title: {$regex: searchTerm}}
-    // {genre: {$regex: searchTerm}}
+
     this.modelQuery = this.modelQuery.find({
       $or: searchableFields.map(
         (field) =>
@@ -25,11 +25,12 @@ export class QueryBuilder<T> {
           } as FilterQuery<T>)
       ),
     });
+
     return this;
   }
+
   paginate() {
     let limit: number = Number(this.query?.limit || 10);
-
     let skip: number = 0;
 
     if (this.query?.page) {
@@ -38,19 +39,28 @@ export class QueryBuilder<T> {
     }
 
     this.modelQuery = this.modelQuery.skip(skip).limit(limit);
-
     return this;
   }
-  sort() {
-    let sortBy = '-createdAt';
 
-    if (this.query?.sortBy) {
-      sortBy = this.query.sortBy as string;
+  sort() {
+    let sort = '-createdAt'; // Default sorting by creation date
+
+    // Check if sorting by upvotes is requested
+    if (this.query?.sort) {
+      sort = this.query.sort as string;
+      if (this.query?.sort === 'upvotes' || this.query?.sort === 'downvotes') {
+        this.modelQuery = this.modelQuery.sort({ sort: -1 }); // Sort by virtual field
+      } else {
+        this.modelQuery = this.modelQuery.sort(sort);
+      }
+    } else {
+      // Fallback to sorting by creation date
+      this.modelQuery = this.modelQuery.sort(sort);
     }
 
-    this.modelQuery = this.modelQuery.sort(sortBy);
     return this;
   }
+
   fields() {
     let fields = '';
 
@@ -61,6 +71,7 @@ export class QueryBuilder<T> {
     this.modelQuery = this.modelQuery.select(fields);
     return this;
   }
+
   filter() {
     const queryObj = { ...this.query };
     const excludeFields = ['searchTerm', 'page', 'limit', 'sortBy', 'fields'];

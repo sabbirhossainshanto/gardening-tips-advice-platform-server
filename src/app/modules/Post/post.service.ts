@@ -6,6 +6,8 @@ import { IUpdateVote, TPost } from './post.interface';
 import { Post } from './post.model';
 import { ObjectId } from 'mongodb';
 import { JwtPayload } from 'jsonwebtoken';
+import { verifyToken } from '../../utils/verifyJWT';
+import config from '../../config';
 
 const createPostToDB = async (payload: TPost) => {
   const isUserExist = await User.findById(payload.user);
@@ -48,31 +50,88 @@ const getSingleUserPostsFromDB = async (id: string) => {
   return posts;
 };
 
-const getAllPostFromDB = async () => {
-  const post = await Post.find()
-    .populate('upvotes')
-    .populate('downvotes')
-    .populate({
-      path: 'user',
-      populate: {
-        path: 'followers',
-      },
-    })
-    .populate({
-      path: 'user',
-      populate: {
-        path: 'following',
-      },
-    })
-    .populate({
-      path: 'user',
-      populate: {
-        path: 'posts',
+const getAllPostFromDB = async (
+  token: string | undefined,
+  queryParams: Record<string, unknown>
+) => {
+  const { searchTerm, sort = '-createdAt' } = queryParams;
+
+  const pipeline: any[] = [];
+
+  if (token) {
+    const decoded = verifyToken(
+      token,
+      config.jwt_access_secret as string
+    ) as JwtPayload;
+
+    const { email } = decoded;
+    const isUserExist = await User.findOne({ email: email });
+
+    if (
+      isUserExist &&
+      !isUserExist?.isVerified &&
+      !isUserExist?.premiumStatus &&
+      isUserExist?.role === 'USER'
+    ) {
+      pipeline.push({
+        $match: {
+          isPremium: false,
+        },
+      });
+    }
+  } else {
+    pipeline.push({
+      $match: {
+        isPremium: false,
       },
     });
+  }
 
-  return post;
+  // Search by title or description or category
+  if (searchTerm) {
+    const regex = new RegExp(searchTerm as string, 'i'); // case-insensitive search
+    pipeline.push({
+      $match: {
+        $or: [{ title: regex }, { description: regex }, { category: regex }],
+      },
+    });
+  }
+
+  // Sorting based on the query parameter
+  if (sort === 'upvotes') {
+    pipeline.push({
+      $addFields: {
+        upvoteCount: { $size: '$upvotes' }, // Calculate the number of upvotes
+      },
+    });
+    pipeline.push({
+      $sort: { upvoteCount: -1 }, // Sort by upvote count in descending order
+    });
+  } else if (sort === 'downvotes') {
+    pipeline.push({
+      $addFields: {
+        downvoteCount: { $size: '$downvotes' }, // Calculate the number of upvotes
+      },
+    });
+    pipeline.push({
+      $sort: { downvoteCount: -1 }, // Sort by upvote count in descending order
+    });
+  } else {
+    pipeline.push({
+      $sort: { createdAt: -1 }, // Default sorting by creation date
+    });
+  }
+
+  const posts = await Post.aggregate(pipeline).exec();
+  const populatedPosts = await Post.populate(posts, [
+    { path: 'user', populate: ['followers', 'following', 'posts'] },
+    { path: 'upvotes' },
+    { path: 'downvotes' },
+  ]);
+
+  return populatedPosts;
 };
+
 const getSinglePostFromDB = async (id: string) => {
   const post = await Post.findById(id)
     .populate('upvotes')
@@ -274,6 +333,17 @@ const deletePostFromDB = async (id: string) => {
   return result;
 };
 
+const updatePostInToDD = async (id: string, payload: Partial<TPost>) => {
+  const post = await Post.findById(id);
+  if (!post) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Post not found');
+  }
+  console.log(payload);
+  const result = await Post.findByIdAndUpdate(id, payload, { new: true });
+  console.log(result);
+
+  return result;
+};
 export const postService = {
   createPostToDB,
   getUserPostFromDB,
@@ -284,4 +354,5 @@ export const postService = {
   getSinglePostFromDB,
   getSingleUserPostsFromDB,
   getUpvotersForMyPosts,
+  updatePostInToDD,
 };

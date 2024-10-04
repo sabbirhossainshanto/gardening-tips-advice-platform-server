@@ -34,7 +34,8 @@ const getSingleUserPosts = catchAsync(async (req, res) => {
   });
 });
 const getAllPost = catchAsync(async (req, res) => {
-  const posts = await postService.getAllPostFromDB();
+  const token = req.headers.authorization;
+  const posts = await postService.getAllPostFromDB(token, req.query);
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
@@ -102,6 +103,18 @@ const deletePost = catchAsync(async (req, res) => {
   });
 });
 
+const updateSinglePost = catchAsync(async (req, res) => {
+  const { postId } = req.params;
+  const result = await postService.updatePostInToDD(postId as string, req.body);
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Post updated successfully',
+    data: result,
+  });
+});
+
 export const postController = {
   createPost,
   getUserPost,
@@ -112,4 +125,5 @@ export const postController = {
   getSinglePost,
   getSingleUserPosts,
   getUpvotersForMyPosts,
+  updateSinglePost,
 };

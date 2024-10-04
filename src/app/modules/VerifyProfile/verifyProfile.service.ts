@@ -22,6 +22,8 @@ const verifyProfile = async (payload: IVerifyProfile) => {
     customerEmail: isUserExist.email,
   };
   payload.transactionId = transactionId;
+  payload.isPaid = true;
+  payload.date = new Date();
   const session = await mongoose.startSession();
   try {
     session.startTransaction();

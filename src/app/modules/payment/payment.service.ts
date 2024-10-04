@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { join } from 'path';
 import { verifyPayment } from './payment.utils';
 import { readFileSync } from 'fs';
 import { VerifyProfile } from '../VerifyProfile/verifyProfile.model';
 import { User } from '../User/user.model';
 
-const confirmationService = async (transactionId: string, status: string) => {
+const makePayment = async (transactionId: string, status: string) => {
   let greeting;
-  let date = '';
+  let date: any;
   let verifyUser;
 
   if (transactionId) {
@@ -40,6 +41,11 @@ const confirmationService = async (transactionId: string, status: string) => {
   return template;
 };
 
+const getAllPayment = async () => {
+  return await VerifyProfile.find().populate('user');
+};
+
 export const paymentService = {
-  confirmationService,
+  makePayment,
+  getAllPayment,
 };

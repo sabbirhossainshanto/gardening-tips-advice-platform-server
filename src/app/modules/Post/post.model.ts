@@ -9,24 +9,21 @@ const postSchema = new Schema<TPost>(
     },
     description: {
       type: String,
-      required: true,
     },
     user: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'User',
     },
+    content: {
+      type: String,
+    },
     imageUrl: {
       type: String,
-      required: true,
     },
     category: {
       type: String,
       required: true,
-    },
-    tags: {
-      type: [String],
-      default: [],
     },
     isPremium: {
       type: Boolean,

@@ -22,4 +22,5 @@ router.get(
   UserControllers.getAllUsers
 );
 router.get('/:id', UserControllers.getSingleUser);
+router.get('/stats/monthly', UserControllers.getMonthlyStats);
 router.put('/update-user/:userId', UserControllers.updateUser);

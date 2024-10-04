@@ -3,15 +3,15 @@ import { Types } from 'mongoose';
 export type TPost = {
   _id?: string;
   title: string;
-  description: string;
-  user: Types.ObjectId; //user ID associated with this post
+  description?: string;
+  user: Types.ObjectId;
+  content?: string;
   imageUrl?: string;
   category: string;
-  tags?: string[];
   isPremium: boolean;
   upvotes: Types.ObjectId[];
   downvotes: Types.ObjectId[];
-  comments: Types.ObjectId[]; // Array of comment IDs associated with this post
+  comments: Types.ObjectId[];
   createdAt: Date;
   updatedAt: Date;
 };

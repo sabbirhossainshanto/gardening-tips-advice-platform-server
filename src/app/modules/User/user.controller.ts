@@ -47,10 +47,21 @@ const updateUser = catchAsync(async (req, res) => {
     data: user,
   });
 });
+const getMonthlyStats = catchAsync(async (req, res) => {
+  const user = await UserServices.getMonthlyStats();
+
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'Monthly user stats retrieved Successfully',
+    data: user,
+  });
+});
 
 export const UserControllers = {
   getSingleUser,
   userRegister,
   getAllUsers,
   updateUser,
+  getMonthlyStats,
 };

@@ -46,5 +46,11 @@ router.delete(
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   postController.deletePost
 );
+router.put(
+  '/update-post/:postId',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  validateRequest(postValidation.updatePostValidationSchema),
+  postController.updateSinglePost
+);
 
 export const postRoutes = router;

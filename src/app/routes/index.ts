@@ -6,6 +6,7 @@ import { postRoutes } from '../modules/Post/post.route';
 import { followRoutes } from '../modules/Follow/follow.route';
 import { commentRoutes } from '../modules/Comment/comment.route';
 import { verifyProfileRoute } from '../modules/VerifyProfile/verifyProfile.route';
+import { successRoute } from '../modules/payment/success.route';
 import { paymentRoute } from '../modules/payment/payment.route';
 
 const router = express.Router();
@@ -37,11 +38,15 @@ const moduleRoutes = [
     route: commentRoutes,
   },
   {
-    path: '/verifyProfile',
+    path: '/verify-profile',
     route: verifyProfileRoute,
   },
   {
     path: '/success',
+    route: successRoute,
+  },
+  {
+    path: '/payments',
     route: paymentRoute,
   },
 ];
