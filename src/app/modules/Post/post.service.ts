@@ -54,7 +54,7 @@ const getAllPostFromDB = async (
   token: string | undefined,
   queryParams: Record<string, unknown>
 ) => {
-  const { searchTerm, sort = '-createdAt' } = queryParams;
+  const { searchTerm, sort = '-createdAt', limit = 10, skip = 0 } = queryParams;
 
   const pipeline: any[] = [];
 
@@ -121,6 +121,14 @@ const getAllPostFromDB = async (
       $sort: { createdAt: -1 }, // Default sorting by creation date
     });
   }
+
+  pipeline.push({
+    $skip: Number(skip),
+  });
+
+  pipeline.push({
+    $limit: Number(limit),
+  });
 
   const posts = await Post.aggregate(pipeline).exec();
   const populatedPosts = await Post.populate(posts, [

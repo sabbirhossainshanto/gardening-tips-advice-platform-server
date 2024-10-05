@@ -8,6 +8,7 @@ import { commentRoutes } from '../modules/Comment/comment.route';
 import { verifyProfileRoute } from '../modules/VerifyProfile/verifyProfile.route';
 import { successRoute } from '../modules/payment/success.route';
 import { paymentRoute } from '../modules/payment/payment.route';
+import { gardenJournalRoutes } from '../modules/GardenJournal/gardenJournal.route';
 
 const router = express.Router();
 
@@ -48,6 +49,10 @@ const moduleRoutes = [
   {
     path: '/payments',
     route: paymentRoute,
+  },
+  {
+    path: '/garden-journals',
+    route: gardenJournalRoutes,
   },
 ];
 

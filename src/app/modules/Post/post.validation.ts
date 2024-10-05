@@ -7,6 +7,8 @@ export const createPostValidationSchema = z.object({
     category: z.string().min(1, 'Category is required'),
     content: z.string().optional(),
     isPremium: z.boolean().default(false),
+    imageUrl: z.string().optional(),
+    description: z.string().optional(),
   }),
 });
 
