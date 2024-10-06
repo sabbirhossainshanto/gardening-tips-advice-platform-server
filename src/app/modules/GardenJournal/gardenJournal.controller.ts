@@ -35,7 +35,7 @@ const getMyAllGardenJournal = catchAsync(async (req, res) => {
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
-    message: 'Garden journals retrieved Successfully',
+    message: 'Garden journals retrieved Successfullyyyyyyyyyyyy',
     data: gardenJournal,
   });
 });

@@ -11,6 +11,9 @@ const verifyProfileSchema = new Schema<IVerifyProfile>({
   date: {
     type: Date,
   },
+  isPaid: {
+    type: Boolean,
+  },
 
   amount: {
     type: Number,

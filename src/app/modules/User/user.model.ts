@@ -110,13 +110,13 @@ userSchema.statics.isPasswordMatched = async function (
   return await bcryptjs.compare(plainTextPassword, hashedPassword);
 };
 
-userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
-  passwordChangedTimestamp: number,
-  jwtIssuedTimestamp: number
-) {
-  const passwordChangedTime =
-    new Date(passwordChangedTimestamp).getTime() / 1000;
-  return passwordChangedTime > jwtIssuedTimestamp;
-};
+// userSchema.statics.isJWTIssuedBeforePasswordChanged = function (
+//   passwordChangedTimestamp: number,
+//   jwtIssuedTimestamp: number
+// ) {
+//   const passwordChangedTime =
+//     new Date(passwordChangedTimestamp).getTime() / 1000;
+//   return passwordChangedTime > jwtIssuedTimestamp;
+// };
 
 export const User = model<TUser, IUserModel>('User', userSchema);

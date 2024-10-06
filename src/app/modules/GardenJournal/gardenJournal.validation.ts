@@ -9,7 +9,16 @@ const createGardenJournalValidationSchema = z.object({
     isPublic: z.boolean().default(false),
   }),
 });
+const updateGardenJournalValidationSchema = z.object({
+  body: z.object({
+    title: z.string({ required_error: 'Title is required' }).optional(),
+    content: z.string({ required_error: 'Content is required' }).optional(),
+    image: z.string({ required_error: 'Image is required' }).optional(),
+    isPublic: z.boolean().optional(),
+  }),
+});
 
 export const gardenJournalValidation = {
   createGardenJournalValidationSchema,
+  updateGardenJournalValidationSchema,
 };

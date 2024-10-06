@@ -7,6 +7,7 @@ import { createToken } from '../../utils/verifyJWT';
 import { USER_ROLE } from '../User/user.constant';
 import { User } from '../User/user.model';
 import { TLoginUser, TRegisterUser } from './auth.interface';
+import { sendEmail } from '../../utils/sendEmail';
 
 const registerUser = async (payload: TRegisterUser) => {
   // checking if the user is exist
@@ -212,9 +213,75 @@ const refreshToken = async (token: string) => {
   };
 };
 
+const forgetPassword = async (email: string) => {
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  const userData = {
+    _id: user._id,
+    name: user.name,
+    email: user.email,
+    mobileNumber: user.mobileNumber,
+    profilePhoto: user.profilePhoto,
+    role: user.role,
+    status: user.status,
+    isVerified: user?.isVerified,
+    premiumStatus: user?.premiumStatus,
+    followers: user?.followers,
+    following: user?.following,
+    posts: user?.posts,
+    favorites: user?.favorites,
+    createdAt: user?.createdAt,
+    updatedAt: user?.updatedAt,
+  };
+
+  const accessToken = createToken(
+    userData,
+    config.jwt_access_secret as string,
+    '10m'
+  );
+  const generatedLink = `${config.client_base_url}/reset-password?email=${user.email}&token=${accessToken}`;
+  sendEmail(user.email, generatedLink);
+};
+
+const resetPassword = async (
+  payload: { email: string; newPassword: string },
+  token: string
+) => {
+  const user = await User.findOne({ email: payload.email });
+  if (!user) {
+    throw new AppError(httpStatus.NOT_FOUND, 'This user is not found!');
+  }
+
+  const decoded = jwt.verify(
+    token,
+    config.jwt_access_secret as string
+  ) as JwtPayload;
+
+  if (decoded?.email !== payload.email) {
+    throw new AppError(httpStatus.FORBIDDEN, 'You are forbidden!');
+  }
+
+  const hashedPassword = await bcrypt.hash(
+    payload.newPassword,
+    Number(config.bcrypt_salt_rounds)
+  );
+  await User.findOneAndUpdate(
+    {
+      email: decoded?.email,
+    },
+    {
+      password: hashedPassword,
+    }
+  );
+};
 export const AuthServices = {
   registerUser,
   loginUser,
   changePassword,
   refreshToken,
+  forgetPassword,
+  resetPassword,
 };

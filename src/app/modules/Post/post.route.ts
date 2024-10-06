@@ -29,18 +29,15 @@ router.put(
 );
 router.get('/', postController.getAllPost);
 router.get('/:postId', postController.getSinglePost);
+
 router.get('/user/:userId', postController.getSingleUserPosts);
+
 router.get(
   '/users/upvoters',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   postController.getUpvotersForMyPosts
 );
 
-router.get(
-  '/get-my-post',
-  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
-  postController.getUserPost
-);
 router.delete(
   '/:postId',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),

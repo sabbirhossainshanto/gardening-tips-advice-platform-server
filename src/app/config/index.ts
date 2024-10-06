@@ -13,6 +13,7 @@ export default {
   jwt_refresh_secret: process.env.JWT_REFRESH_SECRET,
   jwt_refresh_expires_in: process.env.JWT_REFRESH_EXPIRES_IN,
   client_base_url: process.env.CLIENT_BASE_URL,
+  server_base_url: process.env.SERVER_BASE_URL,
   payment_url: process.env.PAYMENT_URL,
   payment_verify_url: process.env.PAYMENT_VERIFY_URL,
   store_id: process.env.STORE_ID,

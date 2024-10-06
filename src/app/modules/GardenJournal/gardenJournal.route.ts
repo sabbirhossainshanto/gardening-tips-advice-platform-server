@@ -13,17 +13,18 @@ router.post(
   validateRequest(gardenJournalValidation.createGardenJournalValidationSchema),
   gardenJournalController.createGardenJournal
 );
-
-router.get('/', gardenJournalController.getAllGardenJournal);
-router.get('/:gardenId', gardenJournalController.getAllGardenJournal);
 router.get(
-  '/get-my-garden-journal',
+  '/my-garden-journal',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   gardenJournalController.getMyAllGardenJournal
 );
+router.get('/', gardenJournalController.getAllGardenJournal);
+router.get('/:gardenId', gardenJournalController.getSingleGardenJournal);
+
 router.put(
   '/:gardenId',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  validateRequest(gardenJournalValidation.updateGardenJournalValidationSchema),
   gardenJournalController.updateSingleGardenJournal
 );
 router.delete(

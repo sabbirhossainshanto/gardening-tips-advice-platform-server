@@ -54,7 +54,7 @@ const getAllPostFromDB = async (
   token: string | undefined,
   queryParams: Record<string, unknown>
 ) => {
-  const { searchTerm, sort = '-createdAt', limit = 10, skip = 0 } = queryParams;
+  const { searchTerm, sort = '-createdAt' } = queryParams;
 
   const pipeline: any[] = [];
 
@@ -122,13 +122,18 @@ const getAllPostFromDB = async (
     });
   }
 
-  pipeline.push({
-    $skip: Number(skip),
-  });
+  // const limit: number = Number(queryParams?.limit || 10);
+  // let skip: number = 0;
 
-  pipeline.push({
-    $limit: Number(limit),
-  });
+  // const page: number = Number(queryParams?.page || 1);
+  // skip = Number((page - 1) * limit);
+  // pipeline.push({
+  //   $skip: Number(skip),
+  // });
+
+  // pipeline.push({
+  //   $limit: Number(limit),
+  // });
 
   const posts = await Post.aggregate(pipeline).exec();
   const populatedPosts = await Post.populate(posts, [
