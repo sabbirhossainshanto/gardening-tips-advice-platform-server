@@ -24,9 +24,6 @@ const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
 
     const { role, email } = decoded;
 
-    console.log(role);
-    console.log(requiredRoles?.includes(role));
-
     // checking if the user is exist
     const user = await User.isUserExistsByEmail(email);
 

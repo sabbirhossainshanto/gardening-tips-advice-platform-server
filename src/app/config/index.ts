@@ -18,4 +18,6 @@ export default {
   payment_verify_url: process.env.PAYMENT_VERIFY_URL,
   store_id: process.env.STORE_ID,
   signature_key: process.env.SIGNATURE_KEY,
+  sender_email: process.env.SENDER_EMAIL,
+  sender_app_password: process.env.SENDER_APP_PASS,
 };

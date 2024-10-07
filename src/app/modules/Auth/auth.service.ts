@@ -243,7 +243,7 @@ const forgetPassword = async (email: string) => {
     '10m'
   );
   const generatedLink = `${config.client_base_url}/reset-password?email=${user.email}&token=${accessToken}`;
-  sendEmail(user.email, generatedLink);
+  await sendEmail(user.email, generatedLink);
 };
 
 const resetPassword = async (
