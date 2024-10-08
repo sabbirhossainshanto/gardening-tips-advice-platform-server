@@ -35,12 +35,16 @@ const getSingleUserPosts = catchAsync(async (req, res) => {
 });
 const getAllPost = catchAsync(async (req, res) => {
   const token = req.headers.authorization;
-  const posts = await postService.getAllPostFromDB(token, req.query);
+  const { populatedPosts, total } = await postService.getAllPostFromDB(
+    token,
+    req.query
+  );
   sendResponse(res, {
     success: true,
     statusCode: httpStatus.OK,
     message: 'Posts are retrieve Successfully',
-    data: posts,
+    data: populatedPosts,
+    meta: { total },
   });
 });
 

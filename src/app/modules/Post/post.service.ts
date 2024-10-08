@@ -122,18 +122,18 @@ const getAllPostFromDB = async (
     });
   }
 
-  // const limit: number = Number(queryParams?.limit || 10);
-  // let skip: number = 0;
+  const limit: number = Number(queryParams?.limit || 10);
+  let skip: number = 0;
 
-  // const page: number = Number(queryParams?.page || 1);
-  // skip = Number((page - 1) * limit);
-  // pipeline.push({
-  //   $skip: Number(skip),
-  // });
+  const page: number = Number(queryParams?.page || 1);
+  skip = Number((page - 1) * limit);
+  pipeline.push({
+    $skip: Number(skip),
+  });
 
-  // pipeline.push({
-  //   $limit: Number(limit),
-  // });
+  pipeline.push({
+    $limit: Number(limit),
+  });
 
   const posts = await Post.aggregate(pipeline).exec();
   const populatedPosts = await Post.populate(posts, [
@@ -141,8 +141,11 @@ const getAllPostFromDB = async (
     { path: 'upvotes' },
     { path: 'downvotes' },
   ]);
-
-  return populatedPosts;
+  const total = await Post.countDocuments();
+  return {
+    populatedPosts,
+    total,
+  };
 };
 
 const getSinglePostFromDB = async (id: string) => {
