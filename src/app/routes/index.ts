@@ -9,6 +9,8 @@ import { verifyProfileRoute } from '../modules/VerifyProfile/verifyProfile.route
 import { successRoute } from '../modules/payment/success.route';
 import { paymentRoute } from '../modules/payment/payment.route';
 import { gardenJournalRoutes } from '../modules/GardenJournal/gardenJournal.route';
+import { newsFeedRoutes } from '../modules/NewsFeed/newsFeed.route';
+import { userRelationshipRoutes } from '../modules/UserRelationship/userRelationship.route';
 
 const router = express.Router();
 
@@ -53,6 +55,14 @@ const moduleRoutes = [
   {
     path: '/garden-journals',
     route: gardenJournalRoutes,
+  },
+  {
+    path: '/newsFeed',
+    route: newsFeedRoutes,
+  },
+  {
+    path: '/user-relationship',
+    route: userRelationshipRoutes,
   },
 ];
 

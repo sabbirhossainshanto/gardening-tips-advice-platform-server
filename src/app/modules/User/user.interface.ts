@@ -3,7 +3,7 @@ import { Model, Types } from 'mongoose';
 import { USER_ROLE, USER_STATUS } from './user.constant';
 
 export type TUser = {
-  _id?: string;
+  _id: Types.ObjectId;
   name: string;
   role: keyof typeof USER_ROLE;
   email: string;

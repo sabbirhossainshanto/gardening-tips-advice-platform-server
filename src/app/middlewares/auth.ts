@@ -7,6 +7,7 @@ import { catchAsync } from '../utils/catchAsync';
 import { USER_ROLE } from '../modules/User/user.constant';
 import { verifyToken } from '../utils/verifyJWT';
 import { User } from '../modules/User/user.model';
+import { TUser } from '../modules/User/user.interface';
 
 const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
   return catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -52,7 +53,7 @@ const auth = (...requiredRoles: (keyof typeof USER_ROLE)[]) => {
       throw new AppError(httpStatus.UNAUTHORIZED, 'You are not authorized');
     }
 
-    req.user = decoded as JwtPayload;
+    req.user = decoded as TUser;
     next();
   });
 };
