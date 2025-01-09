@@ -6,8 +6,8 @@ import {
 
 export interface IUserRelationship {
   _id: Types.ObjectId;
-  userId: Types.ObjectId;
-  targetUserId: Types.ObjectId;
+  user: Types.ObjectId;
+  targetUser: Types.ObjectId;
   relationshipType: keyof typeof Relationship_Type;
   friendRequestStatus?: keyof typeof FriendRequestStatus;
   isFollowing: boolean;

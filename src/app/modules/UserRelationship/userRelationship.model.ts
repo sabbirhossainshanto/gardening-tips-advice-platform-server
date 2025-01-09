@@ -7,12 +7,12 @@ import {
 
 const userRelationshipSchema = new Schema<IUserRelationship>(
   {
-    userId: {
+    user: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'User',
     },
-    targetUserId: {
+    targetUser: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: 'User',

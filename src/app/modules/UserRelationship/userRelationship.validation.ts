@@ -1,4 +1,3 @@
-import { Types } from 'mongoose';
 import { z } from 'zod';
 import {
   FriendRequestStatus,
@@ -7,8 +6,8 @@ import {
 
 export const createRelationship = z.object({
   body: z.object({
-    userId: z.instanceof(Types.ObjectId),
-    targetUserId: z.instanceof(Types.ObjectId),
+    user: z.string(),
+    targetUser: z.string(),
     relationshipType: z.enum(
       Object.keys(Relationship_Type) as [keyof typeof Relationship_Type]
     ),
@@ -17,8 +16,8 @@ export const createRelationship = z.object({
         Object.keys(FriendRequestStatus) as [keyof typeof FriendRequestStatus]
       )
       .optional(),
-    isFollowing: z.boolean(),
-    isFollower: z.boolean(),
+    isFollowing: z.boolean().default(false),
+    isFollower: z.boolean().default(false),
   }),
 });
 

@@ -16,7 +16,52 @@ const createRelationship = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getPendingFriendRequest = catchAsync(async (req, res) => {
+  const result = await relationShipService.getPendingFriendRequest(req.user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Pending friend request retrieved successfully',
+    data: result,
+  });
+});
+const getMyFollowers = catchAsync(async (req, res) => {
+  const result = await relationShipService.getMyFollowers(req.user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Followers retrieved successfully',
+    data: result,
+  });
+});
+const getMyFollowing = catchAsync(async (req, res) => {
+  const result = await relationShipService.getMyFollowings(req.user);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Following retrieved successfully',
+    data: result,
+  });
+});
+const unFollowUser = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await relationShipService.unFollowUser(req.user, id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Unfollow user successfully',
+    data: result,
+  });
+});
 
 export const relationshipController = {
   createRelationship,
+  getMyFollowers,
+  getMyFollowing,
+  unFollowUser,
+  getPendingFriendRequest,
 };
