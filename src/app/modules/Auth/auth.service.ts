@@ -8,6 +8,7 @@ import { USER_ROLE } from '../User/user.constant';
 import { User } from '../User/user.model';
 import { TLoginUser, TRegisterUser } from './auth.interface';
 import { sendEmail } from '../../utils/sendEmail';
+import { Types } from 'mongoose';
 
 const registerUser = async (payload: TRegisterUser) => {
   // checking if the user is exist
@@ -25,7 +26,7 @@ const registerUser = async (payload: TRegisterUser) => {
   //create token and sent to the  client
 
   const jwtPayload = {
-    _id: newUser._id,
+    _id: newUser._id as Types.ObjectId,
     name: newUser.name,
     email: newUser.email,
     mobileNumber: newUser.mobileNumber,

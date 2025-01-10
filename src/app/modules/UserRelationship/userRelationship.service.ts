@@ -18,6 +18,42 @@ const getPendingFriendRequest = async (user: TUser) => {
   }).populate('user');
   return result;
 };
+const updatePendingFriend = async (
+  user: TUser,
+  payload: { type: 'accept' | 'reject'; userId: string }
+) => {
+  if (payload?.type === 'accept') {
+    const result = await UserRelationship.findOneAndUpdate(
+      {
+        targetUser: user?._id,
+        user: payload.userId,
+        relationshipType: 'friend',
+        friendRequestStatus: 'pending',
+      },
+      {
+        friendRequestStatus: 'accepted',
+      }
+    ).populate('user');
+    return result;
+  }
+  if (payload?.type === 'reject') {
+    const result = await UserRelationship.findOneAndDelete({
+      targetUser: user?._id,
+      user: payload?.userId,
+      relationshipType: 'friend',
+      friendRequestStatus: 'pending',
+    }).populate('user');
+    return result;
+  }
+};
+const getMyFriend = async (user: TUser) => {
+  const result = await UserRelationship.find({
+    targetUser: user?._id,
+    relationshipType: 'friend',
+    friendRequestStatus: 'accepted',
+  }).populate('user');
+  return result;
+};
 
 const getMyFollowers = async (user: TUser) => {
   const result = await UserRelationship.find({
@@ -30,6 +66,17 @@ const getMyFollowers = async (user: TUser) => {
 const getMyFollowings = async (user: TUser) => {
   const result = await UserRelationship.find({
     user: user?._id,
+    relationshipType: 'follow',
+    isFollowing: true,
+  })
+    .populate('user')
+    .populate('targetUser');
+  return result;
+};
+const getSingleFollowings = async (user: TUser, id: string) => {
+  const result = await UserRelationship.findOne({
+    user: user?._id,
+    targetUser: id,
     relationshipType: 'follow',
     isFollowing: true,
   })
@@ -61,4 +108,7 @@ export const relationShipService = {
   getMyFollowings,
   unFollowUser,
   getPendingFriendRequest,
+  getSingleFollowings,
+  getMyFriend,
+  updatePendingFriend,
 };

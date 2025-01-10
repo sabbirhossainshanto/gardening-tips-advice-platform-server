@@ -23,6 +23,11 @@ router.get(
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   relationshipController.getMyFollowing
 );
+router.get(
+  '/following/:id',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  relationshipController.getSingleFollowing
+);
 router.delete(
   '/unfollow/:id',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
@@ -33,6 +38,16 @@ router.get(
   '/pending-friend',
   auth(USER_ROLE.ADMIN, USER_ROLE.USER),
   relationshipController.getPendingFriendRequest
+);
+router.put(
+  '/pending-friend',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  relationshipController.updatePendingFriend
+);
+router.get(
+  '/friends',
+  auth(USER_ROLE.ADMIN, USER_ROLE.USER),
+  relationshipController.getMyFriend
 );
 
 export const userRelationshipRoutes = router;

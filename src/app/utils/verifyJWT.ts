@@ -4,10 +4,11 @@
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import AppError from '../errors/AppError';
 import { USER_ROLE, USER_STATUS } from '../modules/User/user.constant';
+import { Types } from 'mongoose';
 
 export const createToken = (
   jwtPayload: {
-    _id?: string;
+    _id?: Types.ObjectId;
     name: string;
     email: string;
     mobileNumber?: string;

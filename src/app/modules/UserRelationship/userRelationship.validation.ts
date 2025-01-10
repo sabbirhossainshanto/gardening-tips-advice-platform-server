@@ -6,7 +6,6 @@ import {
 
 export const createRelationship = z.object({
   body: z.object({
-    user: z.string(),
     targetUser: z.string(),
     relationshipType: z.enum(
       Object.keys(Relationship_Type) as [keyof typeof Relationship_Type]
